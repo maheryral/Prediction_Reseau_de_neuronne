@@ -1,0 +1,42 @@
+#menu{
+    width:100%;
+    height: 100%;
+   
+    position: relative;
+    
+ 
+
+} 
+#menu .accueil h1{
+    color: rgb(255, 255, 255);
+}
+#menu .accueil{
+    margin-top: 5%;
+    text-align: center;
+}
+#menu li{
+    text-decoration: none;
+    margin-bottom: 30px;
+    height: 40px;
+    border-bottom: 1px solid beige;
+    color: bisque;
+    border-radius: 7px;
+    // box-shadow: 1px 1px 1px 1px  black;
+}
+#menu li:hover{
+  
+   
+   border-radius: 7px;
+  box-shadow: 1px 1px 1px 1px  black;
+}
+#menu li a{
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: rgb(203, 185, 243);
+}
+ #menu ul {
+    text-align: center;
+    position: relative;
+    top:10% ;
+ }

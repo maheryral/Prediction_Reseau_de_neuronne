@@ -1,0 +1,42 @@
+.containe{
+    position: relative;
+    width: 100%;
+    height: auto;
+    margin: 10px;
+   
+    
+}
+.containe .title{
+  
+    text-align: center;
+   
+   
+}
+.title span{
+    font-size: 45px;
+    font-weight: bolder;
+}
+.sujet{
+    background-color: rgb(17, 1, 24);
+    width: 100%;
+    height: auto;
+    text-align: center;
+    box-shadow: 3px 3px 15px 10px rgb(0, 0, 0);
+}
+.sujet span{
+    font-size: 35px;
+    color: white;
+    
+}
+.sujet .button .col button{
+   background-color: aqua;
+   border: none;
+   border-radius: 5px;
+}
+.sujet .button .col button:hover{
+   background-color: rgb(109, 197, 137);
+ }
+ .sujet .button {
+    margin-bottom: 10px;
+  }
+
