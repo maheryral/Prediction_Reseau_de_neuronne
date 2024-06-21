@@ -14,10 +14,14 @@ export class ArchiOptimalComponent implements OnInit {
   table:any
   vp:any
   nbrunite:any
+  toutprototype:any
   poid?:number[][]
+  datax?:number[]=[]
+  datay?:number[]=[]
   matrix: number[][] = [
-    [1, 2],
-    [4, 3]
+    [10, 20,30],
+    [40, 50,60],
+    [70,80,90]
   ];
    constructor(private service:CommunicationService, private renderer:Renderer2,private elementRef: ElementRef){}
    ngOnInit(): void {
@@ -25,14 +29,20 @@ export class ArchiOptimalComponent implements OnInit {
     // let pro=[1,0,1]
     // let x=this.nbrunitecaché(pro,2,1)
     // alert(x)
+    this.declencheur()
     
    
    }
-   
+   declencheur(){
+    let datax=this.service.valuexy(0,0,500)[0]
+    this.nbrunite=this.nbrEntre(9,1,datax)
+     alert(this.nbrunitecaché())
+    // let datax=this.service.valuexy(0,0,500)[0]
+    // this.nbrunite=this.nbrEntre(9,1,datax)
+   }
   nbrEntre(m:number,t:number,datax:any){
     
     const lengthX=datax.length-m*t
-    
     let valueX=[]
     for (let i = 1; i < lengthX; i++) {
       let x=[0]
@@ -47,10 +57,9 @@ export class ArchiOptimalComponent implements OnInit {
     
     this.covarianceMatrix=this.covMatrix(valueX,1)
     this.vp=this.calculateValeurpropre(this.covarianceMatrix)
-    this.createChart(this.vp)
-
+    let nbrunite=this.calculenbrunit(this.vp)
     
-    return this.createChart(this.vp)
+    return  nbrunite
     
   }
   
@@ -116,30 +125,35 @@ covMatrix (matrix:number[][],k:number ):number[][] {
       this.renderer.appendChild(tr, td);
     }
   }
-
-  createChart(data:any) {
+  calculenbrunit(data:any){
+    
+    let dat=this.trietableau(data)
+    let datax=[]
+    let datay=[]
+    const epsilone= 0.008
+    let nbrunite=-1
+    for (let i = 0; i < dat.length; i++) {
+      datax[i]=i
+      datay[i]= Math.sqrt(dat[i]+1);
+      if (nbrunite==-1 && i!=0) {
+        
+        if ((datay[i-1]-datay[i])<epsilone) {
+          
+          nbrunite=datax[i-1]
+        }
+      }
+      
+    }
+    this.createChart(datax,datay)
+    this.createnbrunite(nbrunite,"d'Entrée")
+    return nbrunite
+  }
+  createChart(datax:any,datay:any) {
     const datacanvas=document.querySelector('canvas')
     if (datacanvas) {
       this.renderer.removeChild(datacanvas.parentElement,datacanvas)
     }
-  data=this.trietableau(data)
-  let datax= [0]
-  let datay=[0]
-  const epsilone= 0.008
-  let nbrunite=-1
-  for (let i = 0; i < data.length; i++) {
-    datax[i]=i
-    datay[i]= Math.sqrt(data[i]+1);
-    
-    if (nbrunite==-1 && i!=0) {
-      
-      if ((datay[i-1]-datay[i])<epsilone) {
-        
-        nbrunite=datax[i-1]
-      }
-    }
-    
-  }
+  
     
 
     const canvas = document.createElement('canvas');
@@ -193,7 +207,6 @@ covMatrix (matrix:number[][],k:number ):number[][] {
         }
       });
     }
-    return nbrunite
   }
   trietableau(tab:any){
     tab.sort(function(a:number, b:number) {
@@ -201,7 +214,7 @@ covMatrix (matrix:number[][],k:number ):number[][] {
     });
     return tab
   }
- createnbrunite(nbrunite:number){
+ createnbrunite(nbrunite:number,event:any){
   let div0 =document.getElementById('nbrunite')
   if (div0) {
     this.renderer.removeChild(div0.parentElement,div0)
@@ -209,52 +222,90 @@ covMatrix (matrix:number[][],k:number ):number[][] {
     const response = document.querySelector('#response');
     const div=document.createElement('div');
     div.id='nbrunite'
-    div.innerHTML='Le nombre d"unité d"entrée du réseau est '+ nbrunite
+    div.innerHTML='Le nombre d"unité '+event+' du réseau est '+ nbrunite
     div.style.fontSize='30px'
     div.style.color='rgb(11, 1, 54)'
      div.style.fontWeight='bold'
     response?.appendChild(div);
  }
   nbrunitecaché(){
+    let allmnse=[]
+    let datax=[]
+    for (let i = 0; i < this.nbrunite-1; i++) {
+      allmnse[i]=this.calculenmse(i+1,1)
+      datax[i]=i+1
+      
+    }
+    let minmnse= Math.min(...allmnse);
     
-   
+    this.createChart(datax,allmnse)
+    this.createnbrunite( allmnse.indexOf(minmnse)+1,'Cachée')
     // let h=this.h(reseau,prototype,poids)
     // let deltapourprecede=this.deltacoucheprecedent(reseau,prototype,h,v,poids)
     // let deltapoid=this.deltapoid(v,deltapourprecede,0.1,reseau)
     // let newpoid=this.newpoid(poids,deltapoid,reseau)
     // return v
+    return allmnse.indexOf(minmnse)+1;
   
   }
-  // calculenmse(nbrunitecache:number,nbrunitesortie:number){
-
-  //   const pas=0.1
-  //   let prototype=this.allprototype(this.nbrunite,this.service.valuexy(0,0,500)[0])
-  //   let reseau=[prototype.length,nbrunitecache,nbrunitesortie]
-  //   for (let i = 0; i < prototype.length; i++) {
+  calculenmse(nbrunitecache:number,nbrunitesortie:number){
+    
+    let serie = this.service.valuexy(0,0,500)[0]
+    let varianceserie=this.calculateVariance(serie)
+    const pas=0.1
+    let valattendue=0
+    let valdonneereseau=0
+    let som=0
+    let prototype=this.allprototype(this.nbrunite,serie)
+    let reseau=[prototype[0].length,nbrunitecache,nbrunitesortie]
+    let poids=[this.poidsinitialisation(prototype[0].length,nbrunitecache),this.poidsinitialisation(nbrunitecache,nbrunitesortie)]
+    for (let i = 0; i < prototype.length; i++) {
       
+      let h=this.h(reseau,prototype[i],poids)
+      let v=this.vfunction(reseau,prototype[i],poids)
+       let deltapourprecede=this.deltacoucheprecedent(reseau,prototype[i],h,v,poids)
+       let deltapoid=this.deltapoid(v,deltapourprecede,0.1,reseau)
+       poids=this.newpoid(poids,deltapoid,reseau)
       
-  //   }
-  //   let poids =[this.poidsinitialisation(prototype.length,nbrunitecache),this.poidsinitialisation(nbrunitecache,nbrunitesortie)]
+      som=som+((serie[i+prototype[0].length]-v[reseau.length-1][0]) ** 2)
+      
+    }
+    
+      let nmse=(1/(prototype.length*varianceserie))*som
 
-  //   let v=this.vfunction(reseau,prototype,poids)
-  // }
+    return nmse
+  }
+  calculateVariance(matrix: number[][]): number {
+    // Transformer la matrice en vecteur (tableau)
+    const vector: number[] = matrix.flat();
+
+    // Calculer la moyenne des éléments
+    const mean: number = vector.reduce((acc, val) => acc + val, 0) / vector.length;
+
+    // Calculer la variance
+    const variance: number = vector.reduce((acc, val) => acc + (val - mean) ** 2, 0) / vector.length;
+
+    return variance;
+  }
   allprototype(nbrunite:any,data:any){
+    
     let allprotoype:number[][]=[[]]
      let n=data.length
      let i=1
      let k=0
      let l=0
-     while (l<n) {
+     while (l<n-2) {
       if (!allprotoype[k]) allprotoype[k] = [];
-      for (let j = 0; j < nbrunite; j++) {
+      for (let j = 0; j < nbrunite+1; j++) {
         allprotoype[k][j]=data[i+j]
         
       }
       l=i+nbrunite
       i=i+1
-      
+      k=k+1
      }
-     return allprotoype
+    
+     return allprotoype 
 
   }
   vfunction(reseau:any,prototype: number[],poid:number[][][]){
@@ -409,36 +460,34 @@ covMatrix (matrix:number[][],k:number ):number[][] {
   }
   poidsinitialisation(n1:any,n2:any){
     let poid :number[][] = [[]];
-
-    // Remplissage de la matrice avec des valeurs aléatoires
-    // for (let i = 0; i < n1; i++) {
-    //   // Initialiser une nouvelle ligne si elle n'existe pas
-    //   for (let j = 0; j < n2; j++) {
-    //     if (!poid[j]) poid[j] = [];
-    //     poid[j][i] = parseFloat((Math.random() * (0.3 - 0.1) + 0.1).toFixed(1));
-    //   }
-    // }
-   if (n1==3) {
-    if (!poid[0]) poid[0] = [];
-    poid[0][0]=0.2  
-    if (!poid[1]) poid[1] = [];
-   poid[1][0]=0.3
-   if (!poid[0]) poid[0] = [];
-   poid[0][1]=0.1
-   if (!poid[1]) poid[1] = [];
-   poid[1][1]=0.2
-   if (!poid[0]) poid[0] = [];
-   poid[0][2]=0.1
-   if (!poid[1]) poid[1] = [];
-   poid[1][2]=0.3
+    for (let i = 0; i < n1; i++) {
+      // Initialiser une nouvelle ligne si elle n'existe pas
+      for (let j = 0; j < n2; j++) {
+        if (!poid[j]) poid[j] = [];
+        poid[j][i] = parseFloat((Math.random() * (0.3 - 0.1) + 0.1).toFixed(1));
+      }
+    }
+  //  if (n1==3) {
+  //   if (!poid[0]) poid[0] = [];
+  //   poid[0][0]=0.2  
+  //   if (!poid[1]) poid[1] = [];
+  //  poid[1][0]=0.3
+  //  if (!poid[0]) poid[0] = [];
+  //  poid[0][1]=0.1
+  //  if (!poid[1]) poid[1] = [];
+  //  poid[1][1]=0.2
+  //  if (!poid[0]) poid[0] = [];
+  //  poid[0][2]=0.1
+  //  if (!poid[1]) poid[1] = [];
+  //  poid[1][2]=0.3
    
-   }
-   else{
-    if (!poid[0]) poid[0] = [];
-    poid[0][0]=0.2
-    if (!poid[0]) poid[0] = [];
-   poid[0][1]=0.3
-   }
+  //  }
+  //  else{
+  //   if (!poid[0]) poid[0] = [];
+  //   poid[0][0]=0.2
+  //   if (!poid[0]) poid[0] = [];
+  //  poid[0][1]=0.3
+  //  }
    
     
    
