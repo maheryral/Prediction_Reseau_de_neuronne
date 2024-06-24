@@ -1,5 +1,6 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { CommunicationService } from '../communication.service';
+import { FonctionsService } from '../fonctions.service';
 @Component({
   selector: 'app-xn-yn',
   templateUrl: './xn-yn.component.html',
@@ -9,7 +10,9 @@ export class XnYnComponent implements OnInit {
   tbody:any
   trbody:any
   table:any
-  constructor(private renderer: Renderer2,private service:CommunicationService){
+  xvue:boolean=true
+  yvue:boolean=false
+  constructor(private renderer: Renderer2,private service:CommunicationService,private fonction:FonctionsService){
 
   }
   ngOnInit(): void {
@@ -23,7 +26,7 @@ export class XnYnComponent implements OnInit {
     this.renderer.appendChild(this.tbody, col);
   }
   traitevariable(data:any){
-     const dataxy=this.service.valuexy(0,0,500)
+     const dataxy=this.fonction.valuexy(0,0,500)
      let text=''
      this.trbody=document.getElementById('trbody')
      if (this.trbody) {
@@ -38,6 +41,8 @@ export class XnYnComponent implements OnInit {
 
      }
      if (data=='x') {
+      this.xvue=true
+      this.yvue=false
       for (let i = 1; i < dataxy[0].length; i++) {
        
         text='x'+i+' = '+dataxy[0][i]
@@ -46,6 +51,8 @@ export class XnYnComponent implements OnInit {
        }
      }
      else{
+      this.xvue=false
+      this.yvue=true
       for (let i = 1; i < dataxy[1].length; i++) {
         
         text='y'+i+' = '+dataxy[1][i]

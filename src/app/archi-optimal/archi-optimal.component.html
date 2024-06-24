@@ -1,13 +1,13 @@
 <div class="container">
     <table id="tab">
         <tr id="thbody">
-            <th >
-                 Nbr Unités Entrée
+            <th  (click)="declencheur('entre')" [ngClass]="{'entre':entre,'notentre':!entre}" >
+                 Nbr Unités Entrée 
             </th>
-            <th>
+            <th [ngClass]="{'cache':cache,'notcache':!cache}" (click)="declencheur('cache')">
                 Nbr Unités Cachés
             </th>
-            <th>
+            <th [ngClass]="{'conclusion':conclusion,'notconclusion':!conclusion}">
                 Conclusion
             </th>
         </tr>

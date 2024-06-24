@@ -1,28 +1,32 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommunicationService {
-  
-  constructor() { }
-   valuexy (x0:any, y0:any, n:any){
-    const a= 1.4;
-    const b= 0.3;
-    let XY = [];
-    let xn = [x0];
-    let yn= [y0];
-    
-  
-    for (let i = 0; i < n; i++) {
+  private _nbrunitentre= new BehaviorSubject<any>(0)
+  nbrunitentre$=this._nbrunitentre.asObservable();
 
-         xn[i+1] = yn[i] + 1 - a * xn[i] ** 2;
-         xn[i+1]=parseFloat(xn[i+1].toFixed(8))
-         yn[i+1] = b * xn[i];
-         yn[i+1]=parseFloat(yn[i+1].toFixed(8))
-    }
-  
-       XY=[xn,yn]
-    return XY;
-};
+  private _nbrunitecache= new BehaviorSubject<any>(0)
+  nbrunitecache$=this._nbrunitecache.asObservable();
+
+  private _serie= new BehaviorSubject<any>([])
+  serie$=this._serie.asObservable();
+
+  private _poids= new BehaviorSubject<any>([[[]]])
+  poids$=this._poids.asObservable();
+  constructor() { }
+   changenbrunitentre(entre:any){  
+    this._nbrunitentre.next(entre)
+   }
+   changenbrunitecache(cache:any){
+    this._nbrunitecache.next(cache)
+   }
+   changeserie(serie:any){
+    this._serie.next(serie)
+   }
+   changepoid(poids:any){
+    this._poids.next(poids)
+   }
 }

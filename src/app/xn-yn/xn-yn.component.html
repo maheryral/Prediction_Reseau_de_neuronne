@@ -1,10 +1,10 @@
 <div class="container">
     <table>
         <tr id="thbody">
-            <th (click)="traitevariable('x')" >
+            <th  [ngClass]="{'xvue':xvue,'notxvue':!xvue}" (click)="traitevariable('x')" >
                 Xn
             </th>
-            <th (click)="traitevariable('y')">
+            <th [ngClass]="{'yvue':yvue,'notyvue':!yvue}" (click)="traitevariable('y')">
                 Yn
             </th>
         </tr>

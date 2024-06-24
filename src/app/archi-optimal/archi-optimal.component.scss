@@ -14,14 +14,39 @@ canvas {
 #nbrunite{
     font-size: 60px;
   }
+.entre{
+    color: rgb(11, 1, 54);
+    background-color: rgb(169, 220, 239);
+    
+  }
+.notentre{
+    color: white;
+    background-color: rgb(11, 1, 54);
+  }
+.cache{
+    color: rgb(11, 1, 54);
+    background-color: rgb(169, 220, 239);
+  }
+.notcache{
+    color: white;
+    background-color: rgb(11, 1, 54);
+  }
+.conclusion{
+    color: rgb(11, 1, 54);
+    background-color: rgb(169, 220, 239);
+  }
+.notconclusion{
+    color: white;
+    background-color: rgb(11, 1, 54);
+  }
 .container #tab{
     margin-top: 20px;
     width: 100%;
 }
 .container th{
     border-radius: 7px;
-    background-color: rgb(11, 1, 54);
-    color: white;
+   
+    
 }
 .container th:hover{
     

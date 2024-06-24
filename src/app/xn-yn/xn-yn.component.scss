@@ -10,8 +10,27 @@
 }
 .container th{
     border-radius: 7px;
+    
+}
+.xvue{
+    background-color: rgb(169, 220, 239);
+    color: rgb(0, 0, 0);
+ 
+}
+.notxvue{
     background-color: rgb(11, 1, 54);
     color: white;
+ 
+}
+.yvue{
+    background-color: rgb(169, 220, 239);
+    color: rgb(0, 0, 0);
+
+}
+.notyvue{
+    background-color: rgb(11, 1, 54);
+    color: white;
+
 }
 .container th:hover{
     

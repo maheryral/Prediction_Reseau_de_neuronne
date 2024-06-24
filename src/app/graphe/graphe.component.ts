@@ -1,6 +1,7 @@
 import { Component, ElementRef } from '@angular/core';
 import { Chart, ChartItem } from 'chart.js/auto';
 import { CommunicationService } from '../communication.service';
+import { FonctionsService } from '../fonctions.service';
 
 @Component({
   selector: 'app-graphe',
@@ -8,8 +9,8 @@ import { CommunicationService } from '../communication.service';
   styleUrls: ['./graphe.component.scss']
 })
 export class GrapheComponent {
-  constructor(private elementRef: ElementRef, private service:CommunicationService) { }
-  dataxy:any=this.service.valuexy(0,0,500)
+  constructor(private elementRef: ElementRef, private service:CommunicationService,private fonction:FonctionsService) { }
+  dataxy:any=this.fonction.valuexy(0,0,500)
   ngOnInit() {
    
     this.createChart();

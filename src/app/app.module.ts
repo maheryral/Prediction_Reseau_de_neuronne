@@ -9,6 +9,7 @@ import { RouteComponent } from './route/route.component';
 import { XnYnComponent } from './xn-yn/xn-yn.component';
 import { GrapheComponent } from './graphe/graphe.component';
 import { ArchiOptimalComponent } from './archi-optimal/archi-optimal.component';
+import { ApprentissageComponent } from './apprentissage/apprentissage.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { ArchiOptimalComponent } from './archi-optimal/archi-optimal.component';
     RouteComponent,
     XnYnComponent,
     GrapheComponent,
-    ArchiOptimalComponent
+    ArchiOptimalComponent,
+    ApprentissageComponent
   ],
   imports: [
     BrowserModule,  
