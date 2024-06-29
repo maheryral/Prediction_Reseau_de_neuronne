@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,25 @@ export class CommunicationService {
 
   private _poids= new BehaviorSubject<any>([[[]]])
   poids$=this._poids.asObservable();
+
+  private _menue= new BehaviorSubject<any>(true)
+  menue$=this._menue.asObservable();
+
+  
+  private scrollSubject = new Subject<void>();
+
+  scroll$ = this.scrollSubject.asObservable();
+
+  
   constructor() { }
+  
+  triggerScroll() {
+    this.scrollSubject.next();
+  }
+
+  changemenue(data:any){
+    this._menue.next(data)
+  }
    changenbrunitentre(entre:any){  
     this._nbrunitentre.next(entre)
    }

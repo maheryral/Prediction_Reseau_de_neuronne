@@ -73,7 +73,8 @@ export class GrapheComponent {
               title: {
                 display: true,
                 text: 'yn'
-              },min: -0.5,
+              },
+              min: -0.5,
               max: 0.5,
               ticks: {
                 stepSize: 0.05

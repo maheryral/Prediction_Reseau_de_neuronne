@@ -6,7 +6,8 @@ import { CommunicationService } from './communication.service';
   providedIn: 'root'
 })
 export class FonctionsService {
-
+  serie:any = localStorage.getItem('serie')
+  poids:any=localStorage.getItem('poid')
   constructor(private service:CommunicationService) { 
   }
   valuexy (x0:any, y0:any, n:any){
@@ -83,35 +84,32 @@ export class FonctionsService {
     }
     calculenmse(nbrunitecache:number,nbrunitesortie:number,nbrunitentre:any){
       
-      let serie = [0]
-      this.service.serie$.subscribe(data=>{
-        serie=data
-      })
-      
+      this.serie=localStorage.getItem('serie')
+      this.serie=JSON.parse(this.serie)
       let som=0
-      let prototype=this.allprototype(nbrunitentre,serie)
+      let prototype=this.allprototype(nbrunitentre,this.serie)
+      
       let reseau=[prototype[0].length,nbrunitecache,nbrunitesortie]
-      let poids=[this.poidsinitialisation(nbrunitentre,nbrunitecache),this.poidsinitialisation(nbrunitecache,nbrunitesortie)]
-      this.service.poids$.subscribe(data=>{
-        poids=data
-      })
+      this.poids =localStorage.getItem('poid')
+      
+      this.poids=JSON.parse(this.poids)
+      
       
       for (let i = 0; i < prototype.length; i++) {
-        
-        let h=this.h(reseau,prototype[i],poids)
-        let v=this.vfunction(reseau,prototype[i],poids)
-         let deltapourprecede=this.deltacoucheprecedent(reseau,prototype[i],h,v,poids)
+        let h=this.h(reseau,prototype[i],this.poids)
+        let v=this.vfunction(reseau,prototype[i],this.poids)
+         let deltapourprecede=this.deltacoucheprecedent(reseau,prototype[i],h,v,this.poids)
          let deltapoid=this.deltapoid(v,deltapourprecede,0.1,reseau)
-         poids=this.newpoid(poids,deltapoid,reseau)
+         this.poids=this.newpoid(this.poids,deltapoid,reseau)
          
-        som=som+((serie[i+1+prototype[0].length]-v[reseau.length-1][0]) ** 2)
+        som=som+((this.serie[i+1+prototype[0].length]-v[reseau.length-1][0]) ** 2)
         
-        serie[i+1+prototype[0].length]=v[reseau.length-1][0]
+        this.serie[i+1+prototype[0].length]=v[reseau.length-1][0]
       }
-        this.service.changepoid(poids)
-        this.service.changeserie(serie)
-       
-         let varianceserie=this.calculateVariance(serie)
+         localStorage.setItem('poid',JSON.stringify(this.poids))
+         localStorage.setItem('serie',JSON.stringify(this.serie))
+         
+         let varianceserie=this.calculateVariance(this.serie)
          
         let nmse=som/(prototype.length*varianceserie)
       return nmse
@@ -146,6 +144,35 @@ export class FonctionsService {
       
        return allprotoype 
   
+    }
+    pas_avant(pas:any,prototype:any,reseau:any,poid:any){
+       let prototypepas=prototype
+       let valuepas=[]
+       let reseaux=JSON.parse(reseau)
+       let poids=JSON.parse(poid)
+       valuepas[0]=this.vfunction(reseaux,prototypepas,poids)[reseaux.length-1][0]
+
+       if (pas>1) {
+        
+        
+        for (let i = 1; i < pas; i++) {
+          
+          let m=0
+          let tmprototype=[]
+          tmprototype[m+1]=prototypepas[m]
+          tmprototype[m]=valuepas[i-1]
+          
+          for (let j = 1; j < prototype.length-1; j++) {
+           tmprototype[j+1]=prototypepas[j]
+            
+          } 
+          
+           prototypepas=tmprototype
+           valuepas[i]=this.vfunction(reseaux,prototypepas,poids)[reseaux.length-1][0]
+         } 
+         
+       }
+      return valuepas
     }
     calculenewpoid(){
      
@@ -255,10 +282,14 @@ export class FonctionsService {
       return delta
     }
     g(x:any){
-      return 1/(1+math.exp(-x))
+      // (Math.exp(x)-Math.exp(-x))/(Math.exp(x)+Math.exp(-x))
+     //  1/(1+math.exp(-x))
+      return   (Math.exp(x)-Math.exp(-x))/(Math.exp(x)+Math.exp(-x))
     }
     gprime(x: any){
-      return Math.exp(-x) / ((1 + Math.exp(-x)) ** 2);
+      // (2*Math.exp(-x))/((Math.exp(x)+Math.exp(-x)) ** 2)
+      // Math.exp(-x) / ((1 + Math.exp(-x)) ** 2);
+      return 4/((Math.exp(x)+Math.exp(-x)) ** 2)
     }
     
     deltapoid(v:number[][],delta:number[][],n:any,reseau:any){

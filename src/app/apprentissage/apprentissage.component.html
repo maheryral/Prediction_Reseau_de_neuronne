@@ -1,3 +1,17 @@
-<div id="response">
-   
-</div>
+<div id="apprenti">
+    
+  <div id="container_graphe_aprenti">
+      <div class="row graphe">
+         
+      </div>
+      <div class="row" id="unpaspas"> 
+         <h4>
+           <button (click)="afficheunpas('container_graphe_unpas')">
+               Prediction à un pas en avant
+           </button>
+         </h4>
+        </div>
+    </div>
+    
+    <router-outlet id="unpas"></router-outlet>
+ </div>

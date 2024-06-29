@@ -1,7 +1,8 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { CommunicationService } from '../communication.service';
 import { FonctionsService } from '../fonctions.service';
 import { Chart, ChartItem } from 'chart.js';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-apprentissage',
@@ -9,14 +10,15 @@ import { Chart, ChartItem } from 'chart.js';
   styleUrls: ['./apprentissage.component.scss']
 })
 export class ApprentissageComponent implements OnInit{
-  nbrunitentre:any
-  nbrunitecache:any
-  constructor(private service:CommunicationService,private fonction:FonctionsService, private renderer:Renderer2){}
+  nbrunitentre:any=localStorage.getItem('unitentre')
+  nbrunitecache:any=localStorage.getItem('unitecache')
+  constructor(private service:CommunicationService,private fonction:FonctionsService, private renderer:Renderer2,private route:Router,private elementRef: ElementRef){}
 
 
   ngOnInit(): void {
     this.initialisation()
      this.apprentissage()
+   
   }
   initialisation(){
     // this.service.nbrunitentre$.subscribe(data=>{
@@ -26,42 +28,45 @@ export class ApprentissageComponent implements OnInit{
     // this.service.nbrunitecache$.subscribe(data=>{
     //   this.nbrunitecache=data
     // })
-    this.nbrunitecache=2
-    this.nbrunitentre=5
+    this.nbrunitecache=parseInt(this.nbrunitecache)
+    this.nbrunitentre=parseInt(this.nbrunitentre)
     let poids=[this.fonction.poidsinitialisation(this.nbrunitentre,this.nbrunitecache),this.fonction.poidsinitialisation(this.nbrunitecache,1)]
-    this.service.changepoid(poids)
+    localStorage.setItem('poid',JSON.stringify(poids))
 
     let datax=this.fonction.valuexy(0,0,500)[0]
-    this.service.changeserie(datax)
+    localStorage.setItem('serie',JSON.stringify(datax))
+    let reseau=[this.nbrunitentre,this.nbrunitecache,1]
+    localStorage.setItem('reseaux',JSON.stringify(reseau))
   }
   
   apprentissage(){
+    localStorage.setItem('unpas','true')
+    
+    this.service.changemenue(true)
+
     let epoque=100
     let allmnse=[]
     let datax=[]
-
+      let dat=this.fonction.valuexy(0,0,500)[0]
+      localStorage.setItem('serie',JSON.stringify(dat))
+      let poids=[this.fonction.poidsinitialisation(this.nbrunitentre,this.nbrunitecache),this.fonction.poidsinitialisation(this.nbrunitecache,1)]
+      localStorage.setItem('poid',JSON.stringify(poids))
     for (let i = 0; i < epoque; i++) {
       
       allmnse[i]=this.fonction.calculenmse(this.nbrunitecache,1,this.nbrunitentre)
       
       datax[i]=i+1
       
-    }
      
+    }
+    let minmnse= Math.min(...allmnse);
     return  this.createChart(datax,allmnse)
     
   }
   createChart(datax:any,datay:any) {
-    
-    const datacanvas=document.querySelector('canvas')
-    if (datacanvas) {
-      this.renderer.removeChild(datacanvas.parentElement,datacanvas)
-    }
-  
-    
 
     const canvas = document.createElement('canvas');
-    const response = document.querySelector('#response');
+    const response = document.querySelector('#container_graphe_aprenti')?.querySelector('.graphe');
     response?.appendChild(canvas);
     
     
@@ -72,7 +77,7 @@ export class ApprentissageComponent implements OnInit{
         data: {
           labels: datax,
           datasets: [{
-            label: 'Eₗ='+'\\( \\sqrt{x} \\)',
+            label: '',
             data: datay,
             backgroundColor: 'rgb(16,217,219)',
             pointBorderColor: 'transparent',
@@ -103,6 +108,7 @@ export class ApprentissageComponent implements OnInit{
                 display: true,
                 text: 'E'
               },
+              
               grid: {
                 color: 'rgba(220, 220, 220, 0.05)' 
               }
@@ -113,6 +119,12 @@ export class ApprentissageComponent implements OnInit{
     }
   }
 
- 
+  afficheunpas(id:any){
+    const componentBElement = document.getElementById(id);
+    if (componentBElement) {
+      componentBElement.scrollIntoView({ behavior: 'smooth' });
+      
+    }
+   }
  
 }

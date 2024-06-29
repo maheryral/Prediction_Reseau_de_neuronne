@@ -1,17 +1,17 @@
-#apprenti{
+#nbrunitecomponent{
     width: auto;
     height: auto;
     text-align: center;
+
     
 }
-#container_graphe_aprenti{
+#container_graphe {
     width: 90%;
 }
 canvas {
-   width: 100%;
-  }
-
-  h4 button{
+    width: 80%;
+   }
+h4 button{
     background: none;
     border-bottom: 4px solid black;
     border-top: none;
@@ -25,4 +25,7 @@ h4 button:hover{
     color: rgb(255, 255, 255);
     border-bottom: 4px solid rgb(255, 255, 255);
     background-color: black;
+}
+#unitecache{
+    margin-top: 15px;
 }

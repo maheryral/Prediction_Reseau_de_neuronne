@@ -1,10 +1,10 @@
-<div>
+<div id="nav">
     <div class="row">
         <div class="col">
             <div id="menu">
 
                 <div class="row accueil">
-                    <div class="col" (click)="routenavigate('')">
+                    <div class="col" (click)="routenavigate('/route/acceuil')">
                         <h1> RNA</h1>
                     </div>
                 </div>
@@ -12,22 +12,31 @@
                     <div class="col">
                         <ul>
                             <li (click)="routenavigate('route/xn_yn')">
-                                <a href="/route/xn_yn">500 1er valeur xn et yn</a>
+                                <a class="nav-link active a">500 1er valeur xn et yn</a>
                             </li>
                             <li (click)="routenavigate('route/graphe')">
-                               <a href="/route/graphe">GRAPHIQUE</a>
+                               <a  class="nav-link active a">GRAPHIQUE</a>
                             </li>
-                            <li (click)="routenavigate('route/archi')">
-                                <a href="/route/archi">Architecture_optimal</a>
-                             </li>
-                             <li (click)="routenavigate('route/apprentissage')">
-                                <a href="/route/apprentissage">Apprentissage</a>
-                             </li>
-                             <li (click)="routenavigate('route/graphe')">
-                                <a href="/route/graphe">Prediction a 1 pas</a>
-                             </li>
-                             <li (click)="routenavigate('route/graphe')">
-                                <a href="/route/graphe">prediction a 3 pas</a>
+                            <li >
+                                <a (click)="routenavigate('route/archi/uniteentre')" class="nav-link active a">Prediction</a>
+                                <ul id="prediction">
+                                    <br>
+                                    <!-- <li id="entre" (click)="routenavigate('/route/archi/uniteentre')">
+                                        <a href="/route/archi/uniteentre">unité Entreé</a>
+                                     </li>
+                                     <li id="cache" (click)="routenavigate('/route/archi/uniteentre')">
+                                        <a href="/route/archi/uniteentre">Unité Cachée</a>
+                                     </li>
+                                     <li id="apprentissage" (click)="routenavigate('/route/archi/uniteentre')">
+                                        <a href="/route/archi/uniteentre">Apprentissage</a>
+                                     </li>
+                                     <li id="unpas" (click)="routenavigate('/route/archi/uniteentre')">
+                                        <a href="/route/archi/uniteentre">à 1 et 3 pas en avant </a>
+                                     </li>
+                                     <li id="dixpas" (click)="routenavigate('/route/archi/uniteentre')">
+                                        <a href="/route/archi/uniteentre">à 10 et 20 pas en avant </a>
+                                     </li> -->
+                                </ul>
                              </li>
                         </ul>
                     </div>
@@ -36,7 +45,11 @@
         </div>
       
     </div>
-    
+    <div id="restaurer" (click)="routenavigate('/route/acceuil')" >
+       <button>
+          restaurer
+       </button>  
+    </div>
    
 </div>
 

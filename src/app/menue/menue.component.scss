@@ -1,3 +1,6 @@
+#nav{
+    position: fixed;
+}
 #menu{
     width:100%;
     height: 100%;
@@ -7,6 +10,19 @@
  
 
 } 
+
+#restaurer{
+    position: fixed;
+    bottom: 25px;
+    left:50px;
+    
+}
+#restaurer button{
+    background-color: aquamarine;
+    border-radius: 7px;
+    font-size: 15px;
+    width: 130px;
+}
 #menu .accueil h1{
     color: rgb(255, 255, 255);
 }

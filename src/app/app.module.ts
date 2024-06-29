@@ -10,8 +10,52 @@ import { XnYnComponent } from './xn-yn/xn-yn.component';
 import { GrapheComponent } from './graphe/graphe.component';
 import { ArchiOptimalComponent } from './archi-optimal/archi-optimal.component';
 import { ApprentissageComponent } from './apprentissage/apprentissage.component';
-
-
+import { UnitentreComponent } from './unitentre/unitentre.component';
+import { UnitecacheComponent } from './unitecache/unitecache.component';
+import { UnpasComponent } from './unpas/unpas.component';
+import { PlusieurspasComponent } from './plusieurspas/plusieurspas.component';
+import { RouterModule, Routes } from '@angular/router';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+const routes: Routes = [
+  { path: 'route', component: RouteComponent,
+    children:[
+      { path: 'acceuil', component:AcceuilComponent },
+      { path: 'xn_yn', component:XnYnComponent },
+      { path: 'graphe', component:GrapheComponent },
+      { path: 'archi', component:ArchiOptimalComponent, 
+        children:[
+          { path: 'uniteentre', component:UnitentreComponent,
+            children:[
+              { path: 'unitecache', component:UnitecacheComponent,
+                children:[
+                  { path: 'apprentissage', component:ApprentissageComponent, 
+                    children:[
+                      { path:'unpas',component:UnpasComponent,
+                        children:[
+                          {path:'plusieurs',component:PlusieurspasComponent}
+                        ]
+                      },
+                      
+                    ]
+                  },
+                ]
+               },
+            ]
+           },
+          
+        ]
+      },
+      
+      
+     
+     
+    ]
+  },
+  { path: '', redirectTo: 'route/acceuil', pathMatch: 'full' },
+  
+];
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,13 +65,22 @@ import { ApprentissageComponent } from './apprentissage/apprentissage.component'
     XnYnComponent,
     GrapheComponent,
     ArchiOptimalComponent,
-    ApprentissageComponent
+    ApprentissageComponent,
+    UnitentreComponent,
+    UnitecacheComponent,
+    UnpasComponent,
+    PlusieurspasComponent
   ],
   imports: [
     BrowserModule,  
     AppRoutingModule,
+    HttpClientModule,
+    FormsModule,
+    RouterModule.forRoot(routes,{ useHash: true })
   ],
-  providers: [],
+  
+  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }

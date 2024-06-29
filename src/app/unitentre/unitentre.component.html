@@ -1,0 +1,22 @@
+<div id="nbrunitecomponent">
+   <h4>
+    <button>
+        Calcule de nombre d'unité D'entrée du  reseaux
+    </button>
+   </h4>
+   
+   <div id="container_graphe">
+       <div class="row">
+         
+       </div>
+       <div class="row" id="unitecache"> 
+        <h4>
+          <button (click)="affichecache('container_graphe_cache')">
+              Calcule de nombre d'unité Cachée du reseaux
+          </button>
+        </h4>
+       </div>
+   </div>
+   
+   <router-outlet id="cache"></router-outlet>
+</div>
